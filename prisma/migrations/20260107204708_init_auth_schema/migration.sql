@@ -1,6 +1,6 @@
 -- CreateTable
 CREATE TABLE "user" (
-    "id" TEXT NOT NULL,
+    "id" UUID NOT NULL,
     "name" TEXT NOT NULL,
     "email" TEXT NOT NULL,
     "email_verified" BOOLEAN NOT NULL DEFAULT false,
@@ -13,24 +13,24 @@ CREATE TABLE "user" (
 
 -- CreateTable
 CREATE TABLE "session" (
-    "id" TEXT NOT NULL,
+    "id" UUID NOT NULL,
     "expires_at" TIMESTAMP(3) NOT NULL,
     "token" TEXT NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
     "ip_address" TEXT,
     "user_agent" TEXT,
-    "user_id" TEXT NOT NULL,
+    "user_id" UUID NOT NULL,
 
     CONSTRAINT "session_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "account" (
-    "id" TEXT NOT NULL,
+    "id" UUID NOT NULL,
     "account_id" TEXT NOT NULL,
     "provider_id" TEXT NOT NULL,
-    "user_id" TEXT NOT NULL,
+    "user_id" UUID NOT NULL,
     "access_token" TEXT,
     "refresh_token" TEXT,
     "id_token" TEXT,
@@ -46,7 +46,7 @@ CREATE TABLE "account" (
 
 -- CreateTable
 CREATE TABLE "verification" (
-    "id" TEXT NOT NULL,
+    "id" UUID NOT NULL,
     "identifier" TEXT NOT NULL,
     "value" TEXT NOT NULL,
     "expires_at" TIMESTAMP(3) NOT NULL,
@@ -60,10 +60,10 @@ CREATE TABLE "verification" (
 CREATE UNIQUE INDEX "user_email_key" ON "user"("email");
 
 -- CreateIndex
-CREATE INDEX "session_user_id_idx" ON "session"("user_id");
+CREATE UNIQUE INDEX "session_token_key" ON "session"("token");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "session_token_key" ON "session"("token");
+CREATE INDEX "session_user_id_idx" ON "session"("user_id");
 
 -- CreateIndex
 CREATE INDEX "account_user_id_idx" ON "account"("user_id");

@@ -8,7 +8,7 @@ export function DiscordAuthButton() {
   return (
     <Button
       type="button"
-      className="w-full cursor-pointer bg-[#5865f2] font-sans text-sm font-semibold hover:bg-[#5865f2]/90"
+      className="w-full cursor-pointer bg-[#5865f2] text-sm font-semibold text-white hover:bg-[#5865f2]/90"
       onClick={authenticateWithDiscord}
     >
       <DiscordSymbol />

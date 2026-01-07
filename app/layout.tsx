@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Bricolage_Grotesque, Geist_Mono } from "next/font/google";
 import { ThemeProvider } from "@/components/theme-provider";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const bricoladeGrotesque = Bricolage_Grotesque({
+  axes: ["wdth"],
+  weight: "variable",
+  variable: "--font-bricolade-grotesque",
   subsets: ["latin"],
 });
 
@@ -26,7 +28,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} flex min-h-dvh flex-col antialiased`}
+        className={`${bricoladeGrotesque.variable} ${geistMono.variable} flex min-h-dvh flex-col font-sans antialiased`}
       >
         <ThemeProvider
           attribute="class"

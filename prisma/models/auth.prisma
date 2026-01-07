@@ -1,39 +1,38 @@
 model User {
-  id            String    @id
+  id            String       @id @default(uuid(7)) @db.Uuid
   name          String
-  email         String
-  emailVerified Boolean   @default(false) @map("email_verified")
+  email         String       @unique
+  emailVerified Boolean      @default(false) @map("email_verified")
   image         String?
-  createdAt     DateTime  @default(now()) @map("created_at")
-  updatedAt     DateTime  @updatedAt @map("updated_at")
+  createdAt     DateTime     @default(now()) @map("created_at")
+  updatedAt     DateTime     @updatedAt @map("updated_at")
   sessions      Session[]
   accounts      Account[]
+  investments   Investment[]
 
-  @@unique([email])
   @@map("user")
 }
 
 model Session {
-  id        String   @id
+  id        String   @id @default(uuid(7)) @db.Uuid
   expiresAt DateTime @map("expires_at")
-  token     String
+  token     String   @unique
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
   ipAddress String?  @map("ip_address")
   userAgent String?  @map("user_agent")
-  userId    String   @map("user_id")
+  userId    String   @map("user_id") @db.Uuid
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@unique([token])
   @@index([userId])
   @@map("session")
 }
 
 model Account {
-  id                    String    @id
+  id                    String    @id @default(uuid(7)) @db.Uuid
   accountId             String    @map("account_id")
   providerId            String    @map("provider_id")
-  userId                String    @map("user_id")
+  userId                String    @map("user_id") @db.Uuid
   user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   accessToken           String?   @map("access_token")
   refreshToken          String?   @map("refresh_token")
@@ -50,7 +49,7 @@ model Account {
 }
 
 model Verification {
-  id         String   @id
+  id         String   @id @default(uuid(7)) @db.Uuid
   identifier String
   value      String
   expiresAt  DateTime @map("expires_at")

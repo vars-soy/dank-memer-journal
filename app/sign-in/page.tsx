@@ -30,7 +30,7 @@ export default async function SignInPage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <p className="font-sans">To use the journal you need to sign in</p>
+          <p>To use the journal you need to sign in</p>
         </CardContent>
         <CardFooter>
           <DiscordAuthButton />
