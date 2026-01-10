@@ -42,7 +42,7 @@ const investmentFormVariants = cva("cursor-pointer", {
   },
 });
 
-export function InvestmentForm({
+export function InvestmentFormDialog({
   variant,
 }: VariantProps<typeof investmentFormVariants>) {
   const [state, formAction, pending] = useActionState(createInvestment, null);
@@ -72,11 +72,11 @@ export function InvestmentForm({
             <FieldSet>
               <FieldGroup>
                 <Field>
-                  <FieldLabel htmlFor="new_investment_post_id">
+                  <FieldLabel htmlFor="new_investment_market_id">
                     Market ID
                   </FieldLabel>
                   <Input
-                    id="new_investment_post_id"
+                    id="new_investment_market_id"
                     name="marketId"
                     placeholder="XXXXXX"
                     type="text"
@@ -126,9 +126,7 @@ export function InvestmentForm({
                     required
                   />
                   <FieldError
-                    errors={state?.error?.issues?.nested?.quantity?.map(
-                      (issue) => ({ message: issue }),
-                    )}
+                    errors={mapIssues(state?.error?.issues?.nested?.quantity)}
                   />
                 </Field>
                 <Field>
@@ -152,12 +150,10 @@ export function InvestmentForm({
                       }
                       required
                     />
-                    <FieldError
-                      errors={mapIssues(
-                        state?.error?.issues?.nested?.unitValue,
-                      )}
-                    />
                   </InputGroup>
+                  <FieldError
+                    errors={mapIssues(state?.error?.issues?.nested?.unitValue)}
+                  />
                 </Field>
               </FieldGroup>
             </FieldSet>

@@ -1,7 +1,7 @@
 "use client";
+import { EllipsisIcon, PencilIcon, Trash2Icon } from "lucide-react";
+import { usePathname } from "next/navigation";
 import { useState } from "react";
-import { EllipsisIcon, ReceiptTextIcon, Trash2Icon } from "lucide-react";
-import { TransactionFormDialog } from "@/components/transactions/transaction-form-dialog";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -11,48 +11,46 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { authClient } from "@/lib/auth-client";
-import type { Investment } from "@/generated/prisma/client";
+import type { Transaction } from "@/generated/prisma/client";
+import { deleteTransaction } from "@/lib/actions/transaction";
+import { TransactionFormDialog } from "./transaction-form-dialog";
 
-type InvestmentActionMenuProps = {
-  investmentId: Investment["id"];
+type TransactionItemActionMenuProps = {
+  transaction: Transaction;
 };
 
-export function InvestmentActionMenu({
-  investmentId,
-}: InvestmentActionMenuProps) {
-  const { data: session } = authClient.useSession();
+export function TransactionItemActionMenu({
+  transaction,
+}: TransactionItemActionMenuProps) {
+  const pathname = usePathname();
+
   const [isTransactionDialogOpen, setIsTransactionDialogOpen] = useState(false);
 
-  function handleAddTransaction() {
+  function handleEdit() {
     setIsTransactionDialogOpen(true);
   }
 
-  function handleDelete() {
-    // [TODO] Add implementation
-    console.log(`Remove ID: "${investmentId}"`);
-  }
-
-  if (!session) {
-    return null;
+  async function handleDelete() {
+    await deleteTransaction(transaction.id, pathname);
   }
 
   return (
     <>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="outline" size="icon-sm" className="cursor-pointer">
+          <Button
+            variant="ghost"
+            size="icon-sm"
+            className="size-6 cursor-pointer rounded-sm"
+          >
             <EllipsisIcon />
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
-          <DropdownMenuLabel>Actions</DropdownMenuLabel>
-          <DropdownMenuItem
-            onSelect={handleAddTransaction}
-            className="cursor-pointer"
-          >
-            <ReceiptTextIcon />
-            <span>Add Transaction</span>
+          <DropdownMenuLabel>{transaction.marketId}</DropdownMenuLabel>
+          <DropdownMenuItem onSelect={handleEdit} className="cursor-pointer">
+            <PencilIcon />
+            Edit
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem
@@ -61,14 +59,16 @@ export function InvestmentActionMenu({
             className="cursor-pointer"
           >
             <Trash2Icon />
-            <span>Delete</span>
+            Delete
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
       <TransactionFormDialog
-        investmentId={investmentId}
         isOpen={isTransactionDialogOpen}
         onOpenChange={setIsTransactionDialogOpen}
+        investmentId={transaction.investmentId}
+        transaction={transaction}
+        edit
       />
     </>
   );

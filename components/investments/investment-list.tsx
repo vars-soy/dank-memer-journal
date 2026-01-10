@@ -8,8 +8,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { auth } from "@/lib/auth";
-import { getAllInvestmentsByUserId } from "@/lib/db/api/investments";
-import { InvestmentForm } from "./investment-form";
+import { getAllInvestmentsByUserId } from "@/lib/db/api/investment";
+import { InvestmentFormDialog } from "./investment-form-dialog";
 import { InvestmentItem } from "./investment-item";
 
 export async function InvestmentList() {
@@ -59,7 +59,7 @@ function EmptyList() {
         <p>Start by adding your first investment</p>
       </CardContent>
       <CardFooter>
-        <InvestmentForm />
+        <InvestmentFormDialog />
       </CardFooter>
     </Card>
   );

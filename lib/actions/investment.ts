@@ -4,7 +4,7 @@ import { headers } from "next/headers";
 import * as v from "valibot";
 import { auth } from "@/lib/auth";
 import { investmentInputSchema } from "@/lib/schemas/investment";
-import { insertInvestment } from "@/lib/db/api/investments";
+import { insertInvestment } from "@/lib/db/api/investment";
 
 export async function createInvestment(_: unknown, formData: FormData) {
   const session = await auth.api.getSession({

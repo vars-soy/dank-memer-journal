@@ -6,8 +6,11 @@ model Investment {
   item      String
   quantity  Int
   unitValue Int      @map("unit_value")
-  userId    String   @map("user_id") @db.Uuid
-  user      User     @relation(fields: [userId], references: [id])
+
+  // Relations
+  userId       String        @map("user_id") @db.Uuid
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  transactions Transaction[]
 
   @@unique([marketId, userId])
   @@map("investment")

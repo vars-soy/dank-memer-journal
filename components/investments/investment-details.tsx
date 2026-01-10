@@ -1,5 +1,6 @@
+"use client";
 import { cva } from "class-variance-authority";
-import { BoltIcon } from "lucide-react";
+import { useMemo } from "react";
 import {
   Card,
   CardAction,
@@ -8,15 +9,45 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { cn } from "@/lib/utils/cn";
-import { numberFormatter } from "@/lib/utils/number";
+import { Currency } from "@/components/currency";
+import { calculateTransactionFees } from "@/lib/utils/transaction";
 import type { VariantProps } from "class-variance-authority";
-import type { Investment } from "@/generated/prisma/client";
+import type { Investment, Transaction } from "@/generated/prisma/client";
 
 type InvestmentDetailsProps = {
   investment: Investment;
+  transactions: Transaction[];
 };
 
-export function InvestmentDetails({ investment }: InvestmentDetailsProps) {
+export function InvestmentDetails({
+  investment,
+  transactions,
+}: InvestmentDetailsProps) {
+  const balance = useMemo(() => {
+    const transactionBalance = transactions.reduce<number>(
+      (sum, transaction) =>
+        sum +
+        transaction.unitValue * transaction.fulfilledQuantity -
+        calculateTransactionFees(
+          transaction.days,
+          transaction.quantity,
+          transaction.unitValue,
+        ).total,
+      0,
+    );
+
+    return transactionBalance - investment.unitValue * investment.quantity;
+  }, [investment.quantity, investment.unitValue, transactions]);
+
+  const remainingQuantity = useMemo(() => {
+    const fulfilledCount = transactions.reduce<number>(
+      (sum, transaction) => sum + transaction.fulfilledQuantity,
+      0,
+    );
+    const remaining = investment.quantity - fulfilledCount;
+    return remaining < 0 ? 0 : remaining;
+  }, [investment.quantity, transactions]);
+
   return (
     <Card>
       <CardHeader className="dark:border-input flex items-center justify-between border-b">
@@ -38,26 +69,30 @@ export function InvestmentDetails({ investment }: InvestmentDetailsProps) {
             <Value>{investment.quantity}</Value>
           </Detail>
           <Detail>
+            <Label>Remaining Quantity</Label>
+            <Value>{remainingQuantity}</Value>
+          </Detail>
+          <Detail>
             <Label>Unit Value</Label>
             <Value className="flex items-center">
-              <span>
-                <BoltIcon className="size-3" />
-              </span>
-              <span>&nbsp;{numberFormatter.format(investment.unitValue)}</span>
+              <Currency value={investment.unitValue} />
             </Value>
           </Detail>
           <Detail>
             <Label>Total Investment</Label>
             <Value className="flex items-center">
-              <span>
-                <BoltIcon className="size-3" />
-              </span>
-              <span>
-                &nbsp;
-                {numberFormatter.format(
-                  investment.unitValue * investment.quantity,
-                )}
-              </span>
+              <Currency value={investment.unitValue * investment.quantity} />
+            </Value>
+          </Detail>
+          <Detail>
+            <Label>Current Balance</Label>
+            <Value
+              className={cn(
+                balance > 0 && "text-green-600 dark:text-green-500",
+                balance < 0 && "text-red-600 dark:text-red-500",
+              )}
+            >
+              <Currency value={balance} />
             </Value>
           </Detail>
         </div>

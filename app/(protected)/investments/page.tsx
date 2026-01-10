@@ -1,8 +1,8 @@
 import { headers } from "next/headers";
 import { InvestmentList } from "@/components/investments/investment-list";
 import { auth } from "@/lib/auth";
-import { getInvestmentCount } from "@/lib/db/api/investments";
-import { InvestmentForm } from "@/components/investments/investment-form";
+import { getInvestmentCount } from "@/lib/db/api/investment";
+import { InvestmentFormDialog } from "@/components/investments/investment-form-dialog";
 
 export default async function InvestmentsPage() {
   const session = await auth.api.getSession({
@@ -21,7 +21,7 @@ export default async function InvestmentsPage() {
         <h1 className="text-foreground text-3xl font-bold tracking-tight font-stretch-semi-condensed md:text-4xl">
           Investments
         </h1>
-        {!!investmentCount && <InvestmentForm variant="icon" />}
+        {!!investmentCount && <InvestmentFormDialog variant="icon" />}
       </header>
       <main className="flex flex-1 flex-col items-center px-6">
         <InvestmentList />

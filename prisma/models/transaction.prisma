@@ -1,0 +1,35 @@
+enum TransactionStatus {
+  ACTIVE
+  EXPIRED
+  FULFILLED
+  REMOVED
+}
+
+enum TransactionType {
+  SELL
+  BUY
+}
+
+model Transaction {
+  id        String   @id @default(uuid(7)) @db.Uuid
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  // Data
+  marketId          String            @map("market_id")
+  type              TransactionType   @default(SELL)
+  status            TransactionStatus @default(ACTIVE)
+  unitValue         Int               @map("unit_value")
+  days              Int
+  quantity          Int
+  fulfilledQuantity Int               @default(0) @map("fulfilled_quantity")
+
+  // Relations
+  investmentId String     @map("investment_id") @db.Uuid
+  investment   Investment @relation(fields: [investmentId], references: [id], onDelete: Cascade)
+  userId       String     @map("user_id") @db.Uuid
+  user         User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([marketId, investmentId, userId])
+  @@map("transaction")
+}
