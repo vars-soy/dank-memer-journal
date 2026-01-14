@@ -43,7 +43,7 @@ const investmentFormVariants = cva("cursor-pointer", {
 });
 
 export function InvestmentFormDialog({
-  variant,
+  variant = "default",
 }: VariantProps<typeof investmentFormVariants>) {
   const [state, formAction, pending] = useActionState(createInvestment, null);
 
@@ -140,7 +140,7 @@ export function InvestmentFormDialog({
                     <InputGroupInput
                       id="new_investment_unit_value"
                       name="unitValue"
-                      placeholder="100,000"
+                      placeholder="100000"
                       type="number"
                       min={0}
                       step={1}

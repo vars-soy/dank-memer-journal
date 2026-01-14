@@ -11,8 +11,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { authClient } from "@/lib/auth-client";
 import type { Investment } from "@/generated/prisma/client";
+import { DeleteInvestmentDialog } from "./investment-delete-dialog";
 
 type InvestmentActionMenuProps = {
   investmentId: Investment["id"];
@@ -21,20 +21,15 @@ type InvestmentActionMenuProps = {
 export function InvestmentActionMenu({
   investmentId,
 }: InvestmentActionMenuProps) {
-  const { data: session } = authClient.useSession();
   const [isTransactionDialogOpen, setIsTransactionDialogOpen] = useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
   function handleAddTransaction() {
     setIsTransactionDialogOpen(true);
   }
 
   function handleDelete() {
-    // [TODO] Add implementation
-    console.log(`Remove ID: "${investmentId}"`);
-  }
-
-  if (!session) {
-    return null;
+    setIsDeleteDialogOpen(true);
   }
 
   return (
@@ -69,6 +64,11 @@ export function InvestmentActionMenu({
         investmentId={investmentId}
         isOpen={isTransactionDialogOpen}
         onOpenChange={setIsTransactionDialogOpen}
+      />
+      <DeleteInvestmentDialog
+        investmentId={investmentId}
+        isOpen={isDeleteDialogOpen}
+        onOpenChange={setIsDeleteDialogOpen}
       />
     </>
   );

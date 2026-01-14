@@ -1,5 +1,7 @@
-import type { Prisma, User } from "@/generated/prisma/client";
+import type { Investment, Prisma, User } from "@/generated/prisma/client";
+import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/db/client";
+import { headers } from "next/headers";
 
 export async function getAllInvestmentsByUserId(userId: string) {
   return await prisma.investment.findMany({
@@ -30,6 +32,15 @@ export async function insertInvestment(data: InsertInvestmentArgs) {
         },
       },
     },
+  });
+}
+
+export async function deleteInvestmentById(
+  id: Investment["id"],
+  userId: User["id"],
+) {
+  return await prisma.investment.delete({
+    where: { id, userId },
   });
 }
 

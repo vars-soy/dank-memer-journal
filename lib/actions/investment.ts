@@ -4,7 +4,12 @@ import { headers } from "next/headers";
 import * as v from "valibot";
 import { auth } from "@/lib/auth";
 import { investmentInputSchema } from "@/lib/schemas/investment";
-import { insertInvestment } from "@/lib/db/api/investment";
+import {
+  deleteInvestmentById,
+  insertInvestment,
+} from "@/lib/db/api/investment";
+import { Investment } from "@/generated/prisma/client";
+import { redirect } from "next/navigation";
 
 export async function createInvestment(_: unknown, formData: FormData) {
   const session = await auth.api.getSession({
@@ -54,4 +59,18 @@ export async function createInvestment(_: unknown, formData: FormData) {
     data: investment,
     error: null,
   };
+}
+
+export async function deleteInvestment(id: Investment["id"]) {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
+  if (!session) {
+    throw new Error("Not Authenticated");
+  }
+
+  await deleteInvestmentById(id, session.user.id);
+
+  redirect("/investments");
 }

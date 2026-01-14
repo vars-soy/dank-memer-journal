@@ -18,7 +18,7 @@ export default async function InvestmentsPage() {
   return (
     <div className="container mx-auto flex flex-1 flex-col gap-y-6 py-6">
       <header className="bg-background flex items-center justify-between px-6">
-        <h1 className="text-foreground text-3xl font-bold tracking-tight font-stretch-semi-condensed md:text-4xl">
+        <h1 className="text-foreground text-3xl font-bold tracking-tight md:text-4xl">
           Investments
         </h1>
         {!!investmentCount && <InvestmentFormDialog variant="icon" />}
