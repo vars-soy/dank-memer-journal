@@ -8,7 +8,7 @@ type TransactionListProps = {
 export function TransactionList({ transactions }: TransactionListProps) {
   if (!transactions.length) {
     return (
-      <div className="flex flex-col items-center">
+      <div className="flex flex-col items-start">
         <p className="text-muted-foreground text-sm">
           You have no recorded transactions yet.
         </p>

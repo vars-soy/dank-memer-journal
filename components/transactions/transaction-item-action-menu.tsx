@@ -14,6 +14,7 @@ import {
 import type { Transaction } from "@/generated/prisma/client";
 import { deleteTransaction } from "@/lib/actions/transaction";
 import { TransactionFormDialog } from "./transaction-form-dialog";
+import { DeleteTransactionDialog } from "./transaction-delete-dialog";
 
 type TransactionItemActionMenuProps = {
   transaction: Transaction;
@@ -22,16 +23,15 @@ type TransactionItemActionMenuProps = {
 export function TransactionItemActionMenu({
   transaction,
 }: TransactionItemActionMenuProps) {
-  const pathname = usePathname();
-
   const [isTransactionDialogOpen, setIsTransactionDialogOpen] = useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
   function handleEdit() {
     setIsTransactionDialogOpen(true);
   }
 
-  async function handleDelete() {
-    await deleteTransaction(transaction.id, pathname);
+  function handleDelete() {
+    setIsDeleteDialogOpen(true);
   }
 
   return (
@@ -69,6 +69,11 @@ export function TransactionItemActionMenu({
         investmentId={transaction.investmentId}
         transaction={transaction}
         edit
+      />
+      <DeleteTransactionDialog
+        transactionId={transaction.id}
+        isOpen={isDeleteDialogOpen}
+        onOpenChange={setIsDeleteDialogOpen}
       />
     </>
   );

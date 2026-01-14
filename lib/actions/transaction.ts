@@ -137,7 +137,15 @@ export async function deleteTransaction(
   id: Transaction["id"],
   pathname?: string,
 ) {
-  const result = await deleteTransactionById(id);
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
+  if (!session) {
+    throw new Error("Not Authenticated");
+  }
+
+  const result = await deleteTransactionById(id, session.user.id);
 
   if (pathname) {
     revalidatePath(pathname);

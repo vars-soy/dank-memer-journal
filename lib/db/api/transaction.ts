@@ -67,8 +67,11 @@ export async function updateTransaction(
   });
 }
 
-export async function deleteTransactionById(id: Transaction["id"]) {
+export async function deleteTransactionById(
+  id: Transaction["id"],
+  userId: User["id"],
+) {
   return await prisma.transaction.delete({
-    where: { id },
+    where: { id, userId },
   });
 }
