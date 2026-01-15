@@ -4,7 +4,7 @@ import * as v from "valibot";
 export const env = createEnv({
   server: {
     BETTER_AUTH_SECRET: v.pipe(v.string(), v.nonEmpty()),
-    BETTER_AUTH_URL: v.pipe(v.string(), v.url()),
+    BETTER_AUTH_URL: v.optional(v.pipe(v.string(), v.url())),
     DATABASE_URL: v.pipe(v.string(), v.url()),
     DISCORD_CLIENT_ID: v.pipe(v.string(), v.nonEmpty()),
     DISCORD_CLIENT_SECRET: v.pipe(v.string(), v.nonEmpty()),
