@@ -1,12 +1,13 @@
 import type { Investment, Prisma, User } from "@/generated/prisma/client";
-import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/db/client";
-import { headers } from "next/headers";
 
 export async function getAllInvestmentsByUserId(userId: string) {
   return await prisma.investment.findMany({
     where: {
       userId,
+    },
+    orderBy: {
+      createdAt: "desc",
     },
   });
 }
