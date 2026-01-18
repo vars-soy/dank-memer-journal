@@ -23,6 +23,7 @@ model Transaction {
   days              Int
   quantity          Int
   fulfilledQuantity Int               @default(0) @map("fulfilled_quantity")
+  fee               Int
 
   // Relations
   investmentId String     @map("investment_id") @db.Uuid

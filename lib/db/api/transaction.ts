@@ -13,6 +13,7 @@ import type {
 type InsertTransactionArgs = Pick<
   TransactionCreateInput,
   | "days"
+  | "fee"
   | "fulfilledQuantity"
   | "marketId"
   | "quantity"
@@ -28,6 +29,7 @@ export async function insertTransaction(args: InsertTransactionArgs) {
     data: {
       days: args.days,
       marketId: args.marketId,
+      fee: args.fee,
       fulfilledQuantity: args.fulfilledQuantity,
       quantity: args.quantity,
       status: args.status,
@@ -51,6 +53,7 @@ type UpdateTransactionData = Pick<
   TransactionUpdateInput,
   | "days"
   | "marketId"
+  | "fee"
   | "fulfilledQuantity"
   | "quantity"
   | "status"

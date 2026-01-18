@@ -182,6 +182,7 @@ export function TransactionForm({
                     type="number"
                     inputMode="numeric"
                     min={1}
+                    max={28}
                     step={1}
                     defaultValue={
                       edit && transaction ? transaction.days : undefined
@@ -232,6 +233,35 @@ export function TransactionForm({
                   />
                 </Field>
               </div>
+              <Field className="p-0.75">
+                <FieldLabel htmlFor="new_transaction_fee">Fee</FieldLabel>
+                <InputGroup>
+                  <InputGroupAddon className="pl-3">
+                    <BoltIcon className="size-4" />
+                  </InputGroupAddon>
+                  <InputGroupInput
+                    id="new_transaction_fee"
+                    name="fee"
+                    placeholder="250"
+                    type="number"
+                    inputMode="numeric"
+                    min={0}
+                    step={1}
+                    // [TODO] Add calculated default value?
+                    defaultValue={
+                      edit && transaction ? transaction.fee : undefined
+                    }
+                    aria-invalid={
+                      state?.error?.type === "validation" &&
+                      !!state.error.issues?.nested?.fee?.length
+                    }
+                    required
+                  />
+                </InputGroup>
+                <FieldError
+                  errors={mapIssues(state?.error?.issues?.nested?.fee)}
+                />
+              </Field>
             </FieldGroup>
           </FieldSet>
         </FieldGroup>

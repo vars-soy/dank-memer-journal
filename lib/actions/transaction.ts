@@ -35,6 +35,7 @@ export async function createTransaction(
   const validationResult = v.safeParse(transactionInputSchema, {
     days: Number.parseInt(String(formData.get("days"))),
     marketId: formData.get("marketId")?.toString()?.toUpperCase(),
+    fee: Number.parseInt(String(formData.get("fee"))),
     fulfilledQuantity: Number.parseInt(
       String(formData.get("fulfilledQuantity")),
     ),
@@ -98,6 +99,7 @@ export async function editTransaction(
   const validationResult = v.safeParse(transactionInputSchema, {
     days: Number.parseInt(String(formData.get("days"))),
     marketId: formData.get("marketId")?.toString()?.toUpperCase(),
+    fee: Number.parseInt(String(formData.get("fee"))),
     fulfilledQuantity: Number.parseInt(
       String(formData.get("fulfilledQuantity")),
     ),

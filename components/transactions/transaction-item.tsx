@@ -11,7 +11,7 @@ import { Item, ItemContent } from "@/components/ui/item";
 import { cn } from "@/lib/utils/cn";
 import type { Transaction } from "@/generated/prisma/client";
 import type { VariantProps } from "class-variance-authority";
-import { calculateTransactionFees } from "@/lib/utils/transaction";
+import { calcTransactionFeePercentage } from "@/lib/utils/transaction";
 import { TRANSACTION_STATUS } from "@/lib/db/enums";
 import { TransactionItemActionMenu } from "./transaction-item-action-menu";
 import { Currency } from "../currency";
@@ -36,19 +36,20 @@ const statusBadgeVariant = cva("capitalize", {
 });
 
 export function TransactionItem({ transaction }: TransactionItemProps) {
-  const fee = useMemo(
+  const balance = useMemo(
     () =>
-      calculateTransactionFees(
-        transaction.days,
+      transaction.unitValue * transaction.fulfilledQuantity - transaction.fee,
+    [transaction.fee, transaction.fulfilledQuantity, transaction.unitValue],
+  );
+
+  const feePercentage = useMemo(
+    () =>
+      calcTransactionFeePercentage(
+        transaction.fee,
         transaction.quantity,
         transaction.unitValue,
       ),
-    [transaction.days, transaction.quantity, transaction.unitValue],
-  );
-
-  const balance = useMemo(
-    () => transaction.unitValue * transaction.fulfilledQuantity - fee.total,
-    [fee.total, transaction.fulfilledQuantity, transaction.unitValue],
+    [transaction.fee, transaction.quantity, transaction.unitValue],
   );
 
   const fulfilledUnitValue = useMemo(
@@ -86,9 +87,6 @@ export function TransactionItem({ transaction }: TransactionItemProps) {
               <Badge className="bg-slate-400/25 text-slate-500 dark:text-slate-400">
                 {transaction.days}d
               </Badge>
-              <Badge className="bg-purple-400/25 text-purple-700 capitalize dark:text-purple-400">
-                {transaction.type.toLowerCase()}
-              </Badge>
               <Badge
                 className={statusBadgeVariant({ status: transaction.status })}
               >
@@ -117,9 +115,9 @@ export function TransactionItem({ transaction }: TransactionItemProps) {
           <Detail variant="row">
             <Label>Fee:</Label>
             <Value className="flex items-center">
-              <Currency value={fee.total} />
+              <Currency value={transaction.fee} />
               &nbsp;
-              <span>({fee.percentage}%)</span>
+              <span>({feePercentage}%)</span>
             </Value>
           </Detail>
           <Detail variant="row">

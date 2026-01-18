@@ -7,6 +7,12 @@ export const transactionInputSchema = v.pipe(
       v.number(),
       v.integer("Must be a whole number"),
       v.minValue(1, "Must be at least 1"),
+      v.maxValue(28, "Must be 28 at most"),
+    ),
+    fee: v.pipe(
+      v.number(),
+      v.integer("Must be a whole number"),
+      v.minValue(0, "Must be at least 0"),
     ),
     fulfilledQuantity: v.pipe(
       v.number(),

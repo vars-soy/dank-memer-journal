@@ -10,7 +10,6 @@ import {
 } from "@/components/ui/card";
 import { cn } from "@/lib/utils/cn";
 import { Currency } from "@/components/currency";
-import { calculateTransactionFees } from "@/lib/utils/transaction";
 import type { VariantProps } from "class-variance-authority";
 import type { Investment, Transaction } from "@/generated/prisma/client";
 
@@ -28,11 +27,7 @@ export function InvestmentDetails({
       (sum, transaction) =>
         sum +
         transaction.unitValue * transaction.fulfilledQuantity -
-        calculateTransactionFees(
-          transaction.days,
-          transaction.quantity,
-          transaction.unitValue,
-        ).total,
+        transaction.fee,
       0,
     );
 
